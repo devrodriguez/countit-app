@@ -13,33 +13,33 @@
     </ion-toolbar>
   </ion-header>
   <div id="container">
-      <ion-item>
-        <ion-icon name="person" color="primary" slot="start"></ion-icon>
-        <ion-label>
-          John Rodriguez
-        </ion-label>
-      </ion-item>
-      <ion-item>
-        <ion-icon name="apps" color="primary" slot="start"></ion-icon>
-        <ion-select placeholder="Bloque">
-          <ion-select-option value="NV0001">ER012</ion-select-option>
-          <ion-select-option value="NV0002">ER013</ion-select-option>
-          <ion-select-option value="NV0003">ER014</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-icon name="rose" color="primary" slot="start"></ion-icon>
-        <ion-select placeholder="Variedad">
-          <ion-select-option value="NV0001">Freedom</ion-select-option>
-          <ion-select-option value="NV0002">Otra</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-img src="https://www.rocharose.com/variedad/assets/img/tipos/cherry3.jpg"></ion-img>
-      <ion-item class="item-amount">
-        <ion-input placeholder="#" class="input-big-size ion-text-center" type="number"></ion-input>
-      </ion-item>    
-      <ion-item lines="none">
-        <ion-label color="secondary" class="ion-text-center">Cantidad Contada</ion-label>
-      </ion-item>
+    <ion-item>
+      <ion-icon name="person" color="primary" slot="start"></ion-icon>
+      <ion-label>
+        John Rodriguez
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="apps" color="primary" slot="start"></ion-icon>
+      <ion-select placeholder="Bloque" [(ngModel)]="block" (ionChange)="changeBlock()">
+        <ion-select-option [value]="bl" *ngFor="let bl of blocks">{{bl.name}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="rose" color="primary" slot="start"></ion-icon>
+      <ion-select placeholder="Variedad" [(ngModel)]="product" (ionChange)="changeProduct()">
+        <ion-select-option *ngFor="let prod of products" [value]="prod">{{prod.name}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-img src="https://www.rocharose.com/variedad/assets/img/tipos/cherry3.jpg"></ion-img>
+    <ion-item class="item-amount">
+      <ion-input placeholder="#" class="input-big-size ion-text-center" type="number" [(ngModel)]="count.amount"></ion-input>
+    </ion-item>    
+    <ion-item lines="none">
+      <ion-label color="secondary" class="ion-text-center">Cantidad Contada</ion-label>
+    </ion-item>
   </div>
 </ion-content>
+<ion-footer>
+    <ion-button expand="full" color="success" (click)="saveCount()">Guardar</ion-button>
+</ion-footer>

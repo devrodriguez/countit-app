@@ -10,6 +10,7 @@ const routes: Routes = [
   {
     path: 'counts',
     loadChildren: () => import('./pages/counts/counts.module').then( m => m.CountsPageModule)
+    // TODO implement fire auth guard from @angular/fire/auth-guard
   }
 ];
 
