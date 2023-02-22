@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "countit-c0d6f": {
+      "hosting": {
+        "app": [
+          "countit-c0d6f"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "countit-c0d6f"
+  }
+}
