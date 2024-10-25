@@ -21,7 +21,7 @@ export class LoginPage implements OnInit {
 
   login() {
     this.authSrv.user = this.user;
-    this.router.navigateByUrl('counts', { replaceUrl: true });
+    this.router.navigateByUrl('count-bunches', { replaceUrl: true });
   }
 
 }

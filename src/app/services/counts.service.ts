@@ -18,4 +18,13 @@ export class CountsService {
     const collCount: AngularFirestoreCollection<Count> = this.afs.collection<Count>('counts');
     return collCount;
   }
+
+  saveCount(collector: string, product: string, amount: number) {
+    const collBunCount = this.afs.collection('bunche-counts');
+    return collBunCount.add({
+      collector,
+      product,
+      amount,
+    })
+  }
 }

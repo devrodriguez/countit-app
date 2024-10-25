@@ -11,8 +11,9 @@ export class AppComponent implements OnInit {
 
   public appPages = [
     { title: 'Conteos', url: '/counts', icon: 'mail' },
+    { title: 'Ramos', url: '/count-bunches', icon: 'mail' },
   ];
-  
+
   constructor(private authSrv: AuthService) {}
 
   ngOnInit(): void {
