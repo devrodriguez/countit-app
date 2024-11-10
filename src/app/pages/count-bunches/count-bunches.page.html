@@ -19,16 +19,15 @@
   <ion-grid>
     <ion-row class="ion-justify-content-center">
       <ion-col sizeSm="12" sizeMd="3">
-        <ion-item (click)="scan('collector')">
+        <ion-item (click)="scanQR('collector')">
           <ion-icon name="apps" color="primary" slot="start"></ion-icon>
           <ion-label>{{ collector }}</ion-label>
         </ion-item>
-        <ion-item (click)="scan('product')">
+        <ion-item (click)="scanQR('product')">
           <ion-icon name="rose" color="primary" slot="start"></ion-icon>
           <ion-label>{{ product }}</ion-label>
-        </ion-item>    
-        <video #video [hidden]="!isScanActive" width="100%" playsinline class="mt-10"></video>
-        <canvas #canvas hidden></canvas>
+        </ion-item>
+        <div id="qr-reader" width="300px"></div>        
         <ion-item class="item-amount">
           <ion-input 
           placeholder="#" 
@@ -38,13 +37,18 @@
           max="9999" [(ngModel)]="amount"></ion-input>
         </ion-item>    
         <ion-item lines="none">
-          <ion-label color="secondary" class="ion-text-center">Cantidad Contada</ion-label>
+          <ion-label color="secondary" class="ion-text-center">Cantidad</ion-label>
         </ion-item>
       </ion-col>
     </ion-row>
     <ion-row class="ion-justify-content-center" *ngIf="!isScanActive">
       <ion-col sizeSm="12" sizeMd="3" class="ion-text-center">
         <ion-icon name="rose-outline" class="icon-big-size"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <div id="qr-reader" width="300px"></div>
       </ion-col>
     </ion-row>
   </ion-grid>
