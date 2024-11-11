@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { Count } from '../interfaces/count';
+import { Count, Counts } from '../interfaces/count';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +19,8 @@ export class CountsService {
     return collCount;
   }
 
-  saveCount(collector: string, product: string, amount: number) {
-    const collBunCount = this.afs.collection('bunche-counts');
-    return collBunCount.add({
-      collector,
-      product,
-      amount,
-    })
+  saveCount(count: Counts) {
+    const collBunCount = this.afs.collection('counts');
+    return collBunCount.add(count);
   }
 }

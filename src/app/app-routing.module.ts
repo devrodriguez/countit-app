@@ -17,8 +17,8 @@ const routes: Routes = [
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   },
   {
-    path: 'count-bunches',
-    loadChildren: () => import('./pages/count-bunches/count-bunches.module').then( m => m.CountBunchesPageModule)
+    path: 'count-workpoint',
+    loadChildren: () => import('./pages/count-workpoint/count-workpoint.module').then( m => m.CountWorkpointPageModule)
   }
 ];
 

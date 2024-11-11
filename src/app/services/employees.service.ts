@@ -25,7 +25,7 @@ export class EmployeesService {
     const actions = await firstValueFrom(snapshot);
 
     if (actions.length === 0) {
-      throw new Error(`No se encontró ningún empleado con el código ${code}`);
+      return {} as Employee;
     }
 
     const a = actions[0];

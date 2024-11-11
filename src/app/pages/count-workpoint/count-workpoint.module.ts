@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CountBunchesPageRoutingModule } from './count-bunches-routing.module';
+import { CountWorkpointPageRoutingModule } from './count-workpoint-routing.module';
 
-import { CountBunchesPage } from './count-bunches.page';
+import { CountWorkpointPage } from './count-workpoint.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CountBunchesPageRoutingModule
+    CountWorkpointPageRoutingModule
   ],
-  declarations: [CountBunchesPage]
+  declarations: [CountWorkpointPage]
 })
-export class CountBunchesPageModule {}
+export class CountWorkpointPageModule {}
