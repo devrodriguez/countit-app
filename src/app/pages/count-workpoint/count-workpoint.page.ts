@@ -3,7 +3,7 @@ import { LoadingController, ToastController } from '@ionic/angular';
 import { Html5Qrcode } from "html5-qrcode";
 
 import { CountsService } from 'src/app/services/counts.service';
-import { WORKPOINT_TYPE, WORKER_TYPE, PRODUCT_TYPE } from './helper/consts';
+import { WORKPOINT_TYPE, WORKER_TYPE, PRODUCT_TYPE } from '../../helper/consts';
 import { Counts } from 'src/app/interfaces/count';
 import { WorkersService } from 'src/app/services/workers.service';
 import { Worker } from 'src/app/interfaces/worker';
@@ -67,9 +67,9 @@ export class CountWorkpointPage implements OnInit {
       async (decodedText: any, decodedResult: any) => {
         if (this.isScanning) return
 
+        await this.html5QrCode.stop()
         await this.beepAudio?.play()
         await this.setScannedData(decodedText)
-        await this.html5QrCode.stop()
       })
   }
 
@@ -141,7 +141,7 @@ export class CountWorkpointPage implements OnInit {
       await this.showLoading()
       await this.countsSrv.saveCount(count);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.showToast("Some error saving bunche count");
       throw Error("some error saving bunche count")
     } finally {

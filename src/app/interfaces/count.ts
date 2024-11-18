@@ -22,5 +22,5 @@ export interface Counts {
     product_id: string
     product_code: string
     product_name: string
-    created_at: string
+    created_at: number
 }

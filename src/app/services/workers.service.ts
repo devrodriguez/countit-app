@@ -13,14 +13,19 @@ export class WorkersService {
   constructor(private readonly afs: AngularFirestore) { }
 
   async getWorker(id: string) {
-    const workerRef = this.afs.collection('workers').doc(id)
-    const workerSnap = await workerRef.get().toPromise()
+    const workerRef = this.afs.collection('employees').doc(id)
+    const workerSnap = await firstValueFrom(workerRef.get())
+    const workerData = workerSnap.data() as Worker
+    const workerID = workerData.id
 
-    return workerSnap
+    return {
+      ...workerData,
+      id: workerID
+    }
   }
 
   async getWorkerByCode(code: string): Promise<Worker | null> {
-    const snapshot = this.afs.collection('workers', q => q.where('code', '==', code)).snapshotChanges()
+    const snapshot = this.afs.collection('employees', q => q.where('code', '==', code)).snapshotChanges()
     const workers = await firstValueFrom(snapshot)
 
     if (workers.length === 0) {
@@ -28,9 +33,12 @@ export class WorkersService {
     }
 
     const [worker] = workers
-    let data = worker.payload.doc.data() as Worker
-    data.id = worker.payload.doc.id
+    const workerData = worker.payload.doc.data() as Worker
+    const workerID = worker.payload.doc.id
 
-    return data
+    return {
+      ...workerData,
+      id: workerID
+    }
   }
 }
