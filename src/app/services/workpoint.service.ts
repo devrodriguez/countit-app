@@ -20,7 +20,7 @@ export class WorkpointService {
     const docSnap = await getDoc(docRef)
 
     if (!docSnap.exists()) {
-      return {} as Workpoint;
+      return null;
     }
 
     const data = docSnap.data() as Workpoint;

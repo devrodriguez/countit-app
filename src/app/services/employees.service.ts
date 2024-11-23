@@ -11,15 +11,15 @@ export class EmployeesService {
   private employeeRef: CollectionReference<DocumentData>;
 
   constructor(private readonly firestore: Firestore) {
-    this.employeeRef = collection(this.firestore, 'employee')
+    this.employeeRef = collection(this.firestore, 'employees')
   }
 
-  async getEmployeeByID(docID: string): Promise<Employee> {
+  async getEmployeeByID(docID: string): Promise<Employee | null> {
     const docRef = doc(this.employeeRef, docID)
     const docSnap = await getDoc(docRef)
 
     if (!docSnap.exists()) {
-      return {} as Employee;
+      return null;
     }
 
     const data = docSnap.data() as Employee;

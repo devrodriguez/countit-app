@@ -16,65 +16,61 @@
       <ion-title size="large">Ramos</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-grid>
-    <ion-row class="ion-justify-content-center">
-      <ion-col sizeSm="12" sizeMd="3">
-        <ion-item (click)="scan(workpointType)">
-          <ion-icon name="pin" color="primary" slot="start"></ion-icon>
-        </ion-item>
-        <ion-item  detail="false">
-          <ion-label>
-            <strong>Bloque</strong>
-            <ion-text>{{ workpoint?.block?.name }}</ion-text>
-          </ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>
-            <strong>Variedad</strong>
-            <ion-text>{{ workpoint?.product?.name }}</ion-text>
-          </ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>
-            <strong>Mesa</strong>
-            <ion-text>{{ workpoint?.stand?.name }}</ion-text>
-          </ion-label>
-        </ion-item>
-        <ion-item (click)="scan(employeeType)">
-          <ion-icon name="person" color="primary" slot="start"></ion-icon>
-          <ion-label>{{ employee?.firstName }} {{ employee?.lastName }}</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="rose" color="primary" slot="start"></ion-icon>
-         <ion-select [(ngModel)]="selectedPackaging">
-          <ion-select-option *ngFor="let packaging of packagings" [value]="packaging">{{ packaging.name }}</ion-select-option>
-         </ion-select>
-        </ion-item>
-        <div id="qr-reader" width="300px"></div>        
-        <ion-item class="item-amount">
-          <ion-input 
-          placeholder="#" 
-          class="input-big-size ion-text-center" 
-          type="number" 
-          min="1" 
-          max="9999" [(ngModel)]="amount"></ion-input>
-        </ion-item>    
-        <ion-item lines="none">
-          <ion-label color="secondary" class="ion-text-center">Cantidad</ion-label>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-justify-content-center" *ngIf="!isScanning">
-      <ion-col sizeSm="12" sizeMd="3" class="ion-text-center">
-        <ion-icon name="rose-outline" class="icon-big-size"></ion-icon>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <div id="qr-reader" width="300px"></div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-list [inset]="true">
+    <ion-item [button]="true" detail="false" (click)="scan(workpointType)">
+      <div class="unread-indicator-wrapper" slot="start">
+        <ion-icon name="home" color="primary"></ion-icon>
+      </div>
+      <ion-label>
+        <strong>Puesto de trabajo</strong>
+        <ion-note color="medium" class="ion-text-wrap" *ngIf="workpoint">
+          Bloque: {{ workpoint.block.name }}<br/>
+          Variedad: {{ workpoint.product.name }}<br/>
+          Mesa: {{ workpoint.stand.name }}
+        </ion-note>
+      </ion-label>
+      <!--
+      <div class="metadata-end-wrapper" slot="end">
+        <ion-note color="medium">06:11</ion-note>
+        <ion-icon color="medium" name="chevron-forward"></ion-icon>
+      </div>
+      -->
+    </ion-item>
+    <ion-item [button]="true" detail="false" (click)="scan(employeeType)">
+      <div class="unread-indicator-wrapper" slot="start">
+        <ion-icon name="person" color="primary"></ion-icon>
+      </div>
+      <ion-label>
+        <strong>Trabajador</strong>
+        <ion-note color="medium" class="ion-text-wrap" *ngIf="workpoint">
+          {{ employee?.firstName }} {{ employee?.lastName }}
+        </ion-note>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <div class="unread-indicator-wrapper" slot="start">
+        <ion-icon name="rose" color="primary"></ion-icon>
+      </div>
+      <ion-select [(ngModel)]="selectedPackaging">
+        <ion-select-option *ngFor="let packaging of packagings" [value]="packaging">{{ packaging.name }}</ion-select-option>
+       </ion-select>
+    </ion-item>
+    <div id="qr-reader" width="300px"></div>        
+    <ion-item class="item-amount">
+      <ion-input 
+      placeholder="#" 
+      class="input-big-size ion-text-center" 
+      type="number" 
+      min="1" 
+      max="9999" [(ngModel)]="amount"></ion-input>
+    </ion-item>    
+    <ion-item lines="none">
+      <ion-label color="secondary" class="ion-text-center">Cantidad</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="rose-outline" class="icon-big-size"></ion-icon>
+    </ion-item>
+  </ion-list>
 </ion-content>
 <ion-footer>
   <ion-grid>

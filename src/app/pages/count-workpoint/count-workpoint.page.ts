@@ -71,8 +71,8 @@ export class CountWorkpointPage implements OnInit {
     const qrConfig = {
       fps: 20,
       qrbox: {
-        width: 200,
-        height: 200
+        width: 250,
+        height: 250
       }
     };
 
@@ -98,15 +98,17 @@ export class CountWorkpointPage implements OnInit {
       switch (this.itsScanning) {
         case WORKPOINT_TYPE:
           this.workpoint = await this.workpointSrv.getWorkpointByID(entityID)
-          if (this.workpoint === null) {
+          if (!this.workpoint === null) {
             this.showToast('Workpoint does not exist')
+
             return
           }
           break;
         case EMPLOYEE_TYPE:
           this.employee = await this.employeeSrv.getEmployeeByID(entityID)
-          if (!this.employee.id) {
+          if (!this.employee === null) {
             this.showToast('Employee does not exist')
+
             return
           }
           break;
@@ -130,20 +132,15 @@ export class CountWorkpointPage implements OnInit {
     this.workpoint = null
     this.employee = null
     this.selectedPackaging = null
+    this.html5QrCode
     await this.html5QrCode.stop()
   }
 
   async save() {
     let count = {
-      blockID: this.workpoint?.block.id,
-      blockName: this.workpoint?.block.name,
-      productID: this.workpoint?.product.id,
-      productName: this.workpoint?.product.name,
-      employeeID: this.employee?.id,
-      employeeName: `${this.employee?.firstName} ${this.employee?.lastName}`,
-      standID: this.workpoint?.stand.id,
-      standName: this.workpoint?.stand.name,
-  
+      employee: this.employee,
+      workpoint: this.workpoint,
+      packaging: this.selectedPackaging,
       amount: this.amount
     } as Count
 

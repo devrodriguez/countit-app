@@ -21,31 +21,31 @@ export class CountsService {
     return collCount;
   }
 
-  async getCountByIndex(blockID: string, productID: string, standID: string) {
+  async findCount(count: Count) {
     const dateFrom = new Date()
     const dateTo = new Date()
+    const { workpoint: { block, product, stand } } = count
 
     dateFrom.setHours(0, 0, 0, 0)
     dateTo.setHours(23, 59, 59, 999)
 
     const countSnap = this.afs.collection('counts', q => {
       return q
-      .where('blockID', '==', blockID)
-      .where('productID', '==', productID)
-      .where('standID', '==', standID)
+      .where('workpoint.block.id', '==', block.id)
+      .where('workpoint.product.id', '==', product.id)
+      .where('workpoint.stand.id', '==', stand.id)
       .where('createdAt', '>=', dateFrom.getTime())
       .where('createdAt', '<=', dateTo.getTime())
     }).snapshotChanges()
 
     const counts = await firstValueFrom(countSnap)
-
     if (counts.length === 0) {
       return null
     }
 
-    const [count] = counts
-    const data = count.payload.doc.data() as Count
-    const id = count.payload.doc.id
+    const [fcount] = counts
+    const data = fcount.payload.doc.data() as Count
+    const id = fcount.payload.doc.id
 
     return {
       ...data,
@@ -59,7 +59,7 @@ export class CountsService {
 
     count.createdAt = new Date().getTime()
 
-    const resCount = await this.getCountByIndex(count.blockID, count.productID, count.standID)
+    const resCount = await this.findCount(count)
     if (resCount === null) {
       return collBunCount.add(count);
     } 
