@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import firebase from 'firebase/compat/app';
-import { Count, Counts } from '../interfaces/count';
+import { Count } from '../interfaces/count';
 
 import { firstValueFrom } from 'rxjs';
 
@@ -22,7 +21,7 @@ export class CountsService {
     return collCount;
   }
 
-  async getCountByIndex(productID: string, workerID: string, workpointID: string) {
+  async getCountByIndex(blockID: string, productID: string, standID: string) {
     const dateFrom = new Date()
     const dateTo = new Date()
 
@@ -31,11 +30,11 @@ export class CountsService {
 
     const countSnap = this.afs.collection('counts', q => {
       return q
-      .where('product_id', '==', productID)
-      .where('worker_id', '==', workerID)
-      .where('workpoint_id', '==', workpointID)
-      .where('created_at', '>=', dateFrom.getTime())
-      .where('created_at', '<=', dateTo.getTime())
+      .where('blockID', '==', blockID)
+      .where('productID', '==', productID)
+      .where('standID', '==', standID)
+      .where('createdAt', '>=', dateFrom.getTime())
+      .where('createdAt', '<=', dateTo.getTime())
     }).snapshotChanges()
 
     const counts = await firstValueFrom(countSnap)
@@ -45,7 +44,7 @@ export class CountsService {
     }
 
     const [count] = counts
-    const data = count.payload.doc.data() as Counts
+    const data = count.payload.doc.data() as Count
     const id = count.payload.doc.id
 
     return {
@@ -55,12 +54,12 @@ export class CountsService {
     
   }
 
-  async saveCount(count: Counts) {
+  async saveCount(count: Count) {
     const collBunCount = this.afs.collection('counts')
 
-    count.created_at = new Date().getTime()
+    count.createdAt = new Date().getTime()
 
-    const resCount = await this.getCountByIndex(count.product_id, count.worker_id, count.workpoint_id)
+    const resCount = await this.getCountByIndex(count.blockID, count.productID, count.standID)
     if (resCount === null) {
       return collBunCount.add(count);
     } 

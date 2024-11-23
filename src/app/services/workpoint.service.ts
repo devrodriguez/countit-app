@@ -1,28 +1,31 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { firstValueFrom } from 'rxjs';
+
 import { Workpoint } from '../interfaces/workpoint';
+import { collection, CollectionReference, doc, DocumentData, Firestore, getDoc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WorkpointService {
 
-  constructor(private readonly afs: AngularFirestore) { }
+  private workpointRef: CollectionReference<DocumentData>;
 
-  async getWorkpointByCode(code: string): Promise<Workpoint | null> {
-    const snapshot = this.afs.collection('workpoint', q => q.where('code', '==', code)).snapshotChanges()
-    const workpoints = await firstValueFrom(snapshot)
+  constructor(private readonly firestore: Firestore) {
+    this.workpointRef = collection(this.firestore, 'workpoint')
+  }
 
-    if (workpoints.length === 0) {
-      return null
+  async getWorkpointByID(workpointID: string): Promise<Workpoint | null> {
+    const docRef = doc(this.workpointRef, workpointID)
+    const docSnap = await getDoc(docRef)
+
+    if (!docSnap.exists()) {
+      return {} as Workpoint;
     }
 
-    const [workpoint] = workpoints
-    let data = workpoint.payload.doc.data() as Workpoint
-    data.id = workpoint.payload.doc.id
-
-    return data
+    const data = docSnap.data() as Workpoint;
+    const id = docSnap.id;
+    return { ...data, id };
   }
 }
 

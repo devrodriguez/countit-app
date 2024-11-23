@@ -3,14 +3,16 @@ import { LoadingController, ToastController } from '@ionic/angular';
 import { Html5Qrcode } from "html5-qrcode";
 
 import { CountsService } from 'src/app/services/counts.service';
-import { WORKPOINT_TYPE, WORKER_TYPE, PRODUCT_TYPE } from '../../helper/consts';
-import { Counts } from 'src/app/interfaces/count';
-import { WorkersService } from 'src/app/services/workers.service';
-import { Worker } from 'src/app/interfaces/worker';
+import { WORKPOINT_TYPE, EMPLOYEE_TYPE, PRODUCT_TYPE } from '../../helper/consts';
+import { Count } from 'src/app/interfaces/count';
 import { Product } from 'src/app/interfaces/product';
 import { ProductsService } from 'src/app/services/products.service';
 import { Workpoint } from 'src/app/interfaces/workpoint';
 import { WorkpointService } from 'src/app/services/workpoint.service';
+import { Employee } from 'src/app/interfaces/employee';
+import { EmployeesService } from 'src/app/services/employees.service';
+import { PackagingService } from 'src/app/services/packaging.service';
+import { Packaging } from 'src/app/interfaces/packaging';
 
 @Component({
   selector: 'app-count-workpoint',
@@ -21,11 +23,13 @@ export class CountWorkpointPage implements OnInit {
   private beepAudio: HTMLAudioElement | undefined;
   private loading: HTMLIonLoadingElement | null = null;
 
-  worker: Worker | null = null
-  product: Product | null = null
+  employee: Employee | null = null
   workpoint: Workpoint | null = null;
+  selectedPackaging: Packaging | null = null
+  packagings: Packaging[] = [] as Packaging[]
+
   workpointType = WORKPOINT_TYPE
-  workerType = WORKER_TYPE
+  employeeType = EMPLOYEE_TYPE
   productType = PRODUCT_TYPE
 
   isScanning = false;
@@ -39,13 +43,26 @@ export class CountWorkpointPage implements OnInit {
     private loadingCtrl: LoadingController, 
     private countsSrv: CountsService,
     private workpointSrv: WorkpointService,
-    private workerSrv: WorkersService,
-    private productSrv: ProductsService) {
+    private employeeSrv: EmployeesService,
+    private packagingSrv: PackagingService) {
     this.beepAudio = new Audio('../../../assets/sounds/beep.mp3');
   }
 
   ngOnInit() {
+    this.loadPackagings()
     this.html5QrCode = new Html5Qrcode("qr-reader");
+  }
+
+  loadPackagings() {
+    this.packagingSrv.getPackanings()
+    .subscribe({
+      next: pkgs => {
+        this.packagings = pkgs
+      },
+      error: err => {
+        console.error(err)
+      }
+    })
   }
 
   async scan(elementScanned: string) {
@@ -73,36 +90,29 @@ export class CountWorkpointPage implements OnInit {
       })
   }
 
-  async setScannedData(data: string) {
+  async setScannedData(entityID: string) {
     this.isScanning = true;
 
     try {
       await this.showLoading()
       switch (this.itsScanning) {
         case WORKPOINT_TYPE:
-          this.workpoint = await this.workpointSrv.getWorkpointByCode(data)
+          this.workpoint = await this.workpointSrv.getWorkpointByID(entityID)
           if (this.workpoint === null) {
             this.showToast('Workpoint does not exist')
             return
           }
           break;
-        case WORKER_TYPE:
-          this.worker = await this.workerSrv.getWorkerByCode(data)
-          if (this.worker === null) {
-            this.showToast('Worker does not exist')
-            return
-          }
-          break;
-        case PRODUCT_TYPE:
-          this.product = await this.productSrv.getProductByCode(data)
-          if (this.product === null) {
-            this.showToast('Product does not exist')
+        case EMPLOYEE_TYPE:
+          this.employee = await this.employeeSrv.getEmployeeByID(entityID)
+          if (!this.employee.id) {
+            this.showToast('Employee does not exist')
             return
           }
           break;
         default:
-          this.worker = null;
-          this.product = null;
+          this.employee = null
+          this.workpoint = null
       } 
     } catch (error) {
       this.showToast('Something went wrong')
@@ -118,24 +128,24 @@ export class CountWorkpointPage implements OnInit {
     this.amount = null
     this.itsScanning = ''
     this.workpoint = null
-    this.worker = null
-    this.product = null
+    this.employee = null
+    this.selectedPackaging = null
     await this.html5QrCode.stop()
   }
 
   async save() {
     let count = {
-      worker_id: this.worker?.id,
-      worker_code: this.worker?.code,
-      worker_name: this.worker?.name,
-      workpoint_id: this.workpoint?.id,
-      workpoint_code: this.workpoint?.code,
-      workpoint_name: this.workpoint?.name,
-      product_id: this.product?.id,
-      product_code: this.product?.code,
-      product_name: this.product?.name,
+      blockID: this.workpoint?.block.id,
+      blockName: this.workpoint?.block.name,
+      productID: this.workpoint?.product.id,
+      productName: this.workpoint?.product.name,
+      employeeID: this.employee?.id,
+      employeeName: `${this.employee?.firstName} ${this.employee?.lastName}`,
+      standID: this.workpoint?.stand.id,
+      standName: this.workpoint?.stand.name,
+  
       amount: this.amount
-    } as Counts
+    } as Count
 
     try {
       await this.showLoading()

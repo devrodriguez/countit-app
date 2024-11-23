@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Counts Workpoint</ion-title>
+    <ion-title>Counts by Workpoint</ion-title>
     <ion-chip color="primary" slot="end">
       <ion-icon name="person-outline"></ion-icon>
       <ion-label></ion-label>
@@ -21,15 +21,34 @@
       <ion-col sizeSm="12" sizeMd="3">
         <ion-item (click)="scan(workpointType)">
           <ion-icon name="pin" color="primary" slot="start"></ion-icon>
-          <ion-label>{{ workpoint?.name }}</ion-label>
         </ion-item>
-        <ion-item (click)="scan(workerType)">
+        <ion-item  detail="false">
+          <ion-label>
+            <strong>Bloque</strong>
+            <ion-text>{{ workpoint?.block?.name }}</ion-text>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <strong>Variedad</strong>
+            <ion-text>{{ workpoint?.product?.name }}</ion-text>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <strong>Mesa</strong>
+            <ion-text>{{ workpoint?.stand?.name }}</ion-text>
+          </ion-label>
+        </ion-item>
+        <ion-item (click)="scan(employeeType)">
           <ion-icon name="person" color="primary" slot="start"></ion-icon>
-          <ion-label>{{ worker?.name }}</ion-label>
+          <ion-label>{{ employee?.firstName }} {{ employee?.lastName }}</ion-label>
         </ion-item>
-        <ion-item (click)="scan(productType)">
+        <ion-item>
           <ion-icon name="rose" color="primary" slot="start"></ion-icon>
-          <ion-label>{{ product?.name }}</ion-label>
+         <ion-select [(ngModel)]="selectedPackaging">
+          <ion-select-option *ngFor="let packaging of packagings" [value]="packaging">{{ packaging.name }}</ion-select-option>
+         </ion-select>
         </ion-item>
         <div id="qr-reader" width="300px"></div>        
         <ion-item class="item-amount">
@@ -61,7 +80,7 @@
   <ion-grid>
     <ion-row class="ion-justify-content-center">
       <ion-col sizeSm="12" sizeMd="3">
-        <ion-button expand="full" color="success" [disabled]="!worker || !product || !amount" (click)="save()">Guardar</ion-button>
+        <ion-button expand="full" color="success" [disabled]="!employee || !selectedPackaging || !amount" (click)="save()">Guardar</ion-button>
         <ion-button expand="full" (click)="reset()">Limpiar</ion-button>    
       </ion-col>
     </ion-row>
