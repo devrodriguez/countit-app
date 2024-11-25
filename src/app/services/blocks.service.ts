@@ -1,18 +1,24 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { collection, collectionData, CollectionReference, DocumentData, Firestore, query, where } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+
 import { Block } from '../interfaces/block';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BlocksService {
+  private collRef: CollectionReference<DocumentData>;
 
-  constructor(
-    private readonly afs: AngularFirestore
-  ) { }
+  constructor(private readonly firestore: Firestore) {
+    this.collRef = collection(this.firestore, 'blocks')
+  }
 
-  getBlocks(): AngularFirestoreCollection<Block> {
-    const collBlocks = this.afs.collection<Block>('blocks');
-    return collBlocks;
+  getBlocks() {
+    const docQuery = query(this.collRef, where('status', '==', 'enabled'))
+    
+    return collectionData(docQuery, {
+      idField: 'id'
+    }) as Observable<Block[]>
   }
 }

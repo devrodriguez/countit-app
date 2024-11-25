@@ -15,7 +15,9 @@ import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+  ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

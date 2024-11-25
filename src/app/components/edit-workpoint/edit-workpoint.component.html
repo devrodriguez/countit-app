@@ -1,0 +1,17 @@
+<ion-list>
+    <ion-item>
+        <ion-select [(ngModel)]="selectedBlock" placeholder="Bloque" interface="action-sheet" (ionChange)="handleBlockChange()" style="width: 100%;">
+            <ion-select-option *ngFor="let block of blocks" [value]="block">{{ block.name }}</ion-select-option>
+        </ion-select>
+    </ion-item>
+    <ion-item>
+        <ion-select [(ngModel)]="selectedProduct" placeholder="Variedad" interface="action-sheet" (ionChange)="handleProductChange()" style="width: 100%;">
+            <ion-select-option *ngFor="let product of products" [value]="product">{{ product.name }}</ion-select-option>
+        </ion-select>
+    </ion-item>
+    <ion-item>
+        <ion-select [(ngModel)]="selectedStand" placeholder="Mesa" interface="action-sheet" (ionChange)="handleStandChange()" style="width: 100%;">
+            <ion-select-option *ngFor="let stand of stands" [value]="stand">{{ stand.name }}</ion-select-option>
+        </ion-select>
+    </ion-item>
+</ion-list>

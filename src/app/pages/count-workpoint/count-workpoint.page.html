@@ -16,54 +16,87 @@
       <ion-title size="large">Ramos</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-list [inset]="true">
-    <ion-item [button]="true" detail="false" (click)="scan(workpointType)">
+  <!-- Workpoint -->
+  <ion-card>
+    <ion-card-content>
+      <ion-item lines="none">
+        <div class="unread-indicator-wrapper" slot="start">
+          <ion-icon name="pin" color="primary"></ion-icon>
+        </div>
+        <ion-label style="width: 100%;">Puesto de trabajo</ion-label>
+        <ion-button color="success" shape="round" (click)="showWorkpointContent()" *ngif="false">
+          <ion-icon name="create"></ion-icon>
+        </ion-button>
+        <ion-button color="success" shape="round" (click)="scan(workpointType)">
+          <ion-icon name="scan"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-item *ngIf="isOnEditWorkpoint" lines="none">
+        <div style="width: 100%;">
+          <app-edit-workpoint 
+          (onBlockChange)="handleBlockChange($event)"
+          (onProductChange)="handleProductChange($event)"
+          (onStandChange)="handleStandChange($event)"
+          ></app-edit-workpoint>
+        </div>
+      </ion-item>
+      <ion-item *ngIf="workpoint" lines="none">
+        <ion-label>
+          <ion-note color="medium" class="ion-text-wrap">
+            Bloque: {{ workpoint.block.name }}<br />
+            Variedad: {{ workpoint.product.name }}<br />
+            Mesa: {{ workpoint.stand.name }}
+          </ion-note>
+        </ion-label>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+  <!-- Employee -->
+  <ion-card>
+    <ion-card-content>
+      <ion-item lines="none">
+        <div class="unread-indicator-wrapper" slot="start">
+          <ion-icon name="person" color="primary"></ion-icon>
+        </div>
+        <ion-input placeholder="Identificaciòn del empleado" [(ngModel)]="codeEmployeeSelected" disabled="true">
+        </ion-input>
+        <ion-button color="success" shape="round" *ngif="false">
+          <ion-icon name="search"></ion-icon>
+        </ion-button>
+        <ion-button color="success" shape="round" (click)="scan(employeeType)">
+          <ion-icon name="scan"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-item *ngIf="employee" lines="none">
+        <ion-label>
+          <ion-note color="medium" class="ion-text-wrap">
+            Nombre: {{employee.firstName}} {{employee.lastName}}
+          </ion-note>
+        </ion-label>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+  <!-- Packaging -->
+  <ion-card>
+   <ion-card-content>
+    <ion-item lines="none">
       <div class="unread-indicator-wrapper" slot="start">
-        <ion-icon name="home" color="primary"></ion-icon>
+        <ion-icon name="cube" color="primary"></ion-icon>
       </div>
-      <ion-label>
-        <strong>Puesto de trabajo</strong>
-        <ion-note color="medium" class="ion-text-wrap" *ngIf="workpoint">
-          Bloque: {{ workpoint.block.name }}<br/>
-          Variedad: {{ workpoint.product.name }}<br/>
-          Mesa: {{ workpoint.stand.name }}
-        </ion-note>
-      </ion-label>
-      <!--
-      <div class="metadata-end-wrapper" slot="end">
-        <ion-note color="medium">06:11</ion-note>
-        <ion-icon color="medium" name="chevron-forward"></ion-icon>
-      </div>
-      -->
-    </ion-item>
-    <ion-item [button]="true" detail="false" (click)="scan(employeeType)">
-      <div class="unread-indicator-wrapper" slot="start">
-        <ion-icon name="person" color="primary"></ion-icon>
-      </div>
-      <ion-label>
-        <strong>Trabajador</strong>
-        <ion-note color="medium" class="ion-text-wrap" *ngIf="workpoint">
-          {{ employee?.firstName }} {{ employee?.lastName }}
-        </ion-note>
-      </ion-label>
-    </ion-item>
-    <ion-item>
-      <div class="unread-indicator-wrapper" slot="start">
-        <ion-icon name="rose" color="primary"></ion-icon>
-      </div>
-      <ion-select [(ngModel)]="selectedPackaging">
+      <ion-select [(ngModel)]="selectedPackaging" interface="action-sheet" placeholder="Seleccione el embalaje" style="width: 100%;">
         <ion-select-option *ngFor="let packaging of packagings" [value]="packaging">{{ packaging.name }}</ion-select-option>
-       </ion-select>
+      </ion-select>
     </ion-item>
-    <div id="qr-reader" width="300px"></div>        
+   </ion-card-content>
+  </ion-card>
+  <div>
+    <div id="qr-reader" width="300px"></div>
+  </div>
+  <ion-list [inset]="true">
     <ion-item class="item-amount">
-      <ion-input 
-      placeholder="#" 
-      class="input-big-size ion-text-center" 
-      type="number" 
-      min="1" 
-      max="9999" [(ngModel)]="amount"></ion-input>
-    </ion-item>    
+      <ion-input placeholder="#" class="input-big-size ion-text-center" type="number" min="1" max="9999"
+        [(ngModel)]="amount"></ion-input>
+    </ion-item>
     <ion-item lines="none">
       <ion-label color="secondary" class="ion-text-center">Cantidad</ion-label>
     </ion-item>
@@ -76,8 +109,9 @@
   <ion-grid>
     <ion-row class="ion-justify-content-center">
       <ion-col sizeSm="12" sizeMd="3">
-        <ion-button expand="full" color="success" [disabled]="!employee || !selectedPackaging || !amount" (click)="save()">Guardar</ion-button>
-        <ion-button expand="full" (click)="reset()">Limpiar</ion-button>    
+        <ion-button expand="full" color="success" [disabled]="!checkCountReady()"
+          (click)="save()">Guardar</ion-button>
+        <ion-button expand="full" (click)="reset()">Limpiar</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

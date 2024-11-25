@@ -6,13 +6,14 @@ import { CountsService } from 'src/app/services/counts.service';
 import { WORKPOINT_TYPE, EMPLOYEE_TYPE, PRODUCT_TYPE } from '../../helper/consts';
 import { Count } from 'src/app/interfaces/count';
 import { Product } from 'src/app/interfaces/product';
-import { ProductsService } from 'src/app/services/products.service';
 import { Workpoint } from 'src/app/interfaces/workpoint';
 import { WorkpointService } from 'src/app/services/workpoint.service';
 import { Employee } from 'src/app/interfaces/employee';
 import { EmployeesService } from 'src/app/services/employees.service';
 import { PackagingService } from 'src/app/services/packaging.service';
 import { Packaging } from 'src/app/interfaces/packaging';
+import { Block } from 'src/app/interfaces/block';
+import { Stand } from 'src/app/interfaces/stand';
 
 @Component({
   selector: 'app-count-workpoint',
@@ -32,7 +33,9 @@ export class CountWorkpointPage implements OnInit {
   employeeType = EMPLOYEE_TYPE
   productType = PRODUCT_TYPE
 
+  codeEmployeeSelected: string = ''
   isScanning = false;
+  isOnEditWorkpoint = false
   itsScanning = '';
   collector: any;
   amount: any;
@@ -54,7 +57,7 @@ export class CountWorkpointPage implements OnInit {
   }
 
   loadPackagings() {
-    this.packagingSrv.getPackanings()
+    this.packagingSrv.getPackagings()
     .subscribe({
       next: pkgs => {
         this.packagings = pkgs
@@ -127,12 +130,12 @@ export class CountWorkpointPage implements OnInit {
 
   async reset() {
     this.isScanning = false
+    this.isOnEditWorkpoint = false
     this.amount = null
     this.itsScanning = ''
     this.workpoint = null
     this.employee = null
     this.selectedPackaging = null
-    this.html5QrCode
     await this.html5QrCode.stop()
   }
 
@@ -157,6 +160,31 @@ export class CountWorkpointPage implements OnInit {
 
     this.reset();
     this.showToast('Count saved successfully');
+  }
+
+  async closeScan() {
+    this.itsScanning = ''
+    await this.html5QrCode.stop()
+  }
+
+  showWorkpointContent() {
+    this.isOnEditWorkpoint = true
+  }
+
+  handleBlockChange(block: Block) {
+    this.workpoint = { ...this.workpoint, block } as Workpoint
+  }
+
+  handleProductChange(product: Product) {
+    this.workpoint = { ...this.workpoint, product } as Workpoint
+  }
+
+  handleStandChange(stand: Stand) {
+    this.workpoint = { ...this.workpoint, stand } as Workpoint
+  }
+
+  checkCountReady() {
+    return this.workpoint && this.workpoint.block && this.workpoint.product && this.workpoint.stand && this.employee && this.selectedPackaging && this.amount > 0
   }
 
   async showToast(message: string, color: string = 'success') {

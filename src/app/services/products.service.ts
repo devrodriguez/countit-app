@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { firstValueFrom } from 'rxjs';
+import { 
+  collection, 
+  collectionData, 
+  CollectionReference, 
+  DocumentData, 
+  Firestore, 
+  getDocs, 
+  query, 
+  where 
+} from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 import { Product } from '../interfaces/product';
 
@@ -9,25 +18,35 @@ import { Product } from '../interfaces/product';
 })
 export class ProductsService {
 
-  constructor(private readonly afs: AngularFirestore) { }
+  private collRef: CollectionReference<DocumentData>;
 
-  getProducts(): AngularFirestoreCollection<Product> {
-    const collProducts: AngularFirestoreCollection<Product> = this.afs.collection('products');
-    return collProducts;
+  constructor(private readonly firestore: Firestore) {
+    this.collRef = collection(this.firestore, 'products')
+  }
+
+  getProducts() {
+    const docQuery = query(this.collRef, where('status', '==', 'enabled'))
+    
+    return collectionData(docQuery, {
+      idField: 'id'
+    }) as Observable<Product[]>
   }
 
   async getProductByCode(code: string): Promise<Product | null> {
-    const snapshot = this.afs.collection('products', q => q.where('code', '==', code)).snapshotChanges()
-    const products = await firstValueFrom(snapshot)
+    const collQuery = query(this.collRef, where('code', '==', code))
+    const docRef = await getDocs(collQuery)
 
-    if (products.length === 0) {
+    if (docRef.docs.length === 0) {
       return null;
     }
 
-    const [product] = products
-    let data = product.payload.doc.data() as Product
-    data.id = product.payload.doc.id
+    const [product] = docRef.docs
+    const data = product.data() as Product
+    const docID = product.id
 
-    return data
+    return {
+      ...data,
+      id: docID
+    }
   }
 }

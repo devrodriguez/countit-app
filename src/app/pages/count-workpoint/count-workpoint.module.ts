@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { CountWorkpointPageRoutingModule } from './count-workpoint-routing.module';
 
 import { CountWorkpointPage } from './count-workpoint.page';
+import { EditWorkpointComponent } from 'src/app/components/edit-workpoint/edit-workpoint.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,9 @@ import { CountWorkpointPage } from './count-workpoint.page';
     IonicModule,
     CountWorkpointPageRoutingModule
   ],
-  declarations: [CountWorkpointPage]
+  declarations: [
+    CountWorkpointPage,
+    EditWorkpointComponent
+  ]
 })
 export class CountWorkpointPageModule {}
