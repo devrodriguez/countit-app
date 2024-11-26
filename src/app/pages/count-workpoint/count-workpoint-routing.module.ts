@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { CountBunchesPage } from './count-bunches.page';
+import { CountWorkpointPage } from './count-workpoint.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: CountBunchesPage
+    component: CountWorkpointPage
   }
 ];
 
@@ -14,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class CountBunchesPageRoutingModule {}
+export class CountWorkpointPageRoutingModule {}

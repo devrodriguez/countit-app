@@ -8,17 +8,12 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'counts',
-    loadChildren: () => import('./pages/counts/counts.module').then( m => m.CountsPageModule)
-    // TODO implement fire auth guard from @angular/fire/auth-guard
-  },
-  {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   },
   {
-    path: 'count-bunches',
-    loadChildren: () => import('./pages/count-bunches/count-bunches.module').then( m => m.CountBunchesPageModule)
+    path: 'count-workpoint',
+    loadChildren: () => import('./pages/count-workpoint/count-workpoint.module').then( m => m.CountWorkpointPageModule)
   }
 ];
 

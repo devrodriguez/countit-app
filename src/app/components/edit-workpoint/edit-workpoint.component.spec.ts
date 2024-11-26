@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { CountBunchesPage } from './count-bunches.page';
+import { EditWorkpointComponent } from './edit-workpoint.component';
 
-describe('CountBunchesPage', () => {
-  let component: CountBunchesPage;
-  let fixture: ComponentFixture<CountBunchesPage>;
+describe('EditWorkpointComponent', () => {
+  let component: EditWorkpointComponent;
+  let fixture: ComponentFixture<EditWorkpointComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CountBunchesPage ],
+      declarations: [ EditWorkpointComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CountBunchesPage);
+    fixture = TestBed.createComponent(EditWorkpointComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

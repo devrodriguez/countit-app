@@ -1,0 +1,52 @@
+.button-solid {
+    text-transform: none !important;
+}
+
+.icon-big-size {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    color: purple;
+    opacity: .3;
+    font-size: 180px !important;
+    margin: auto;
+}
+
+.input-big-size {
+    font-size: 48px;
+    height: 60px;
+}
+
+.item-amount {
+    margin-top: 28px;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.unread-indicator {
+    background: var(--ion-color-primary);
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    position: absolute;
+    inset-inline-start: 12px;
+    top: 12px;
+}
+
+ion-label ion-note {
+    font-size: 0.9rem;
+}
+
+/* Card */
+.card-header {
+    background-color: #eee;
+}
+
+.card-content {
+    padding-top: 10px;
+}
+
+.card-icon {
+    margin-right: 7px;
+}

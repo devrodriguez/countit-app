@@ -1,24 +1,24 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { collection, collectionData, CollectionReference, DocumentData, Firestore, query, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
-import { Block } from '../interfaces/block';
+import { Packaging } from '../interfaces/packaging';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BlocksService {
+export class PackagingService {
   private collRef: CollectionReference<DocumentData>;
 
   constructor(private readonly firestore: Firestore) {
-    this.collRef = collection(this.firestore, 'blocks')
+    this.collRef = collection(this.firestore, 'packaging')
   }
 
-  getBlocks() {
+  getPackagings() {
     const docQuery = query(this.collRef, where('status', '==', 'enabled'))
     
     return collectionData(docQuery, {
       idField: 'id'
-    }) as Observable<Block[]>
+    }) as Observable<Packaging[]>
   }
 }
