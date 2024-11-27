@@ -74,8 +74,19 @@
     </ion-select>
    </ion-card-content>
   </ion-card>
-  <div>
-    <div id="qr-reader" width="300px"></div>
+  <div [class]="qrStyle" [style]="{display: isScannerOpened ? '' : 'none'}">
+    <div id="qr-reader"></div>
+    <div class="reader-description">
+      <ion-text color="primary">
+        <p>Ubique el codigo QR dentro del recuadro, la lectura se hace de forma automatica</p>
+      </ion-text>
+    </div>
+    <div class="reader-actions">
+      <ion-button color="light" size="small" (click)="closeScan()">
+        Cerrar
+        <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+      </ion-button>
+    </div>
   </div>
   <ion-list [inset]="true">
     <ion-item class="item-amount">
@@ -94,11 +105,15 @@
 </ion-content>
 <ion-footer>
   <ion-grid>
-    <ion-row class="ion-justify-content-center">
+    <ion-row class="ion-justify-content-center" *ngIf="!isScannerOpened">
       <ion-col sizeSm="12" sizeMd="3">
-        <ion-button expand="full" color="success" [disabled]="!checkCountReady()"
-          (click)="save()">Guardar</ion-button>
-        <ion-button expand="full" (click)="reset()">Limpiar</ion-button>
+        <ion-button 
+          expand="full" 
+          color="success" 
+          [disabled]="!checkCountReady()"
+          (click)="save()">
+          Guardar
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

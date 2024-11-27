@@ -35,7 +35,9 @@ export class CountWorkpointPage implements OnInit {
   productType = PRODUCT_TYPE
 
   codeEmployeeSelected: string = ''
+  qrStyle: string = ''
   isScanning = false;
+  isScannerOpened: Boolean = false
   isOnEditWorkpoint = false
   itsScanning = '';
   collector: any;
@@ -73,6 +75,8 @@ export class CountWorkpointPage implements OnInit {
 
   async scan(elementScanned: string) {
     this.itsScanning = elementScanned;
+    this.qrStyle = 'full-screen'
+    this.isScannerOpened = true;
 
     const qrConfig = {
       fps: 20,
@@ -90,37 +94,46 @@ export class CountWorkpointPage implements OnInit {
       async (decodedText: any, decodedResult: any) => {
         if (this.isScanning) return
 
-        await this.html5QrCode.stop()
-        await this.beepAudio?.play()
-        await this.setScannedData(decodedText)
+        try {
+          await this.beepAudio?.play()
+          await this.setScannedData(decodedText)
+          await this.closeScan()
+        } catch (err) {
+          console.log('[function: scanHandler]', err)
+        }
       })
   }
 
-  async setScannedData(entityID: string) {
+  async setScannedData(entityID: string): Promise<Boolean> {
     this.isScanning = true;
 
     try {
       await this.showLoading()
+
       switch (this.itsScanning) {
         case WORKPOINT_TYPE:
           this.workpoint = await this.workpointSrv.getWorkpointByID(entityID)
-          if (!this.workpoint === null) {
+          if (this.workpoint === null) {
             this.showToast('Workpoint does not exist')
 
-            return
+            return false
           }
-          break;
+
+          return true
         case EMPLOYEE_TYPE:
           this.employee = await this.employeeSrv.getEmployeeByID(entityID)
-          if (!this.employee === null) {
+          if (this.employee === null) {
             this.showToast('Employee does not exist')
 
-            return
+            return false
           }
-          break;
+
+          return true
         default:
           this.employee = null
           this.workpoint = null
+
+          return false
       } 
     } catch (error) {
       this.showToast('Something went wrong')
@@ -136,6 +149,7 @@ export class CountWorkpointPage implements OnInit {
     this.isOnEditWorkpoint = false
     this.amount = null
     this.itsScanning = ''
+    this.qrStyle = ''
     this.workpoint = null
     this.employee = null
     this.selectedPackaging = null
@@ -166,8 +180,10 @@ export class CountWorkpointPage implements OnInit {
   }
 
   async closeScan() {
-    this.itsScanning = ''
     await this.html5QrCode.stop()
+    this.isScanning = false
+    this.itsScanning = ''
+    this.isScannerOpened = false
   }
 
   showWorkpointContent() {
@@ -187,7 +203,13 @@ export class CountWorkpointPage implements OnInit {
   }
 
   checkCountReady() {
-    return this.workpoint && this.workpoint.block && this.workpoint.product && this.workpoint.stand && this.employee && this.selectedPackaging && this.amount > 0
+    return this.workpoint && 
+    this.workpoint.block && 
+    this.workpoint.product && 
+    this.workpoint.stand && 
+    this.employee && 
+    this.selectedPackaging && 
+    this.amount > 0
   }
 
   async showToast(message: string, color: string = 'success') {

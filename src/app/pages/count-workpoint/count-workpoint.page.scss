@@ -1,3 +1,13 @@
+.full-screen {
+    position: absolute; /* Para fijarlo en relación al contenedor */
+    top: 0;             /* Alineado al borde superior */
+    left: 0;            /* Alineado al borde izquierdo */
+    width: 100vw;       /* Ocupa todo el ancho de la ventana */
+    height: 100vh;      /* Ocupa todo el alto de la ventana */
+    background-color: #f0f0f0; /* Color de fondo opcional */
+    z-index: 10;        /* Ajusta la prioridad del componente */
+}
+
 .icon-big-size {
     padding-top: 50px;
     padding-bottom: 50px;
@@ -30,10 +40,6 @@
     top: 12px;
 }
 
-ion-label ion-note {
-    font-size: 0.9rem;
-}
-
 /* Card */
 .card-header {
     background-color: #eee;
@@ -45,4 +51,16 @@ ion-label ion-note {
 
 .card-icon {
     margin-right: 7px;
+}
+
+/* Reader */
+.reader-description {
+    padding: 0 20px;
+    text-align: center;
+}
+
+.reader-actions {
+    margin-top: 12px;
+    text-align: center;
+    width: 100%;
 }
