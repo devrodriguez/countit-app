@@ -8,6 +8,7 @@ import { CountWorkpointPageRoutingModule } from './count-workpoint-routing.modul
 
 import { CountWorkpointPage } from './count-workpoint.page';
 import { EditWorkpointComponent } from 'src/app/components/edit-workpoint/edit-workpoint.component';
+import { ToolbarComponent } from 'src/app/components/toolbar/toolbar.component';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { EditWorkpointComponent } from 'src/app/components/edit-workpoint/edit-w
   ],
   declarations: [
     CountWorkpointPage,
-    EditWorkpointComponent
+    EditWorkpointComponent,
+    ToolbarComponent,
   ]
 })
 export class CountWorkpointPageModule {}

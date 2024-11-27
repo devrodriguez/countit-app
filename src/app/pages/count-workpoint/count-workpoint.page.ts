@@ -14,6 +14,7 @@ import { PackagingService } from 'src/app/services/packaging.service';
 import { Packaging } from 'src/app/interfaces/packaging';
 import { Block } from 'src/app/interfaces/block';
 import { Stand } from 'src/app/interfaces/stand';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-count-workpoint',
@@ -47,7 +48,9 @@ export class CountWorkpointPage implements OnInit {
     private countsSrv: CountsService,
     private workpointSrv: WorkpointService,
     private employeeSrv: EmployeesService,
-    private packagingSrv: PackagingService) {
+    private packagingSrv: PackagingService,
+    public authSrv: AuthService,
+  ) {
     this.beepAudio = new Audio('../../../assets/sounds/beep.mp3');
   }
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from './interfaces/user';
+import { User } from '@angular/fire/auth';
+
 import { AuthService } from './services/auth.service';
 @Component({
   selector: 'app-root',
@@ -7,16 +8,15 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  user: User = {} as User;
+  user: User | null = null;
 
   public appPages = [
-    { title: 'Conteos', url: '/counts', icon: 'mail' },
     { title: 'Ramos', url: '/count-workpoint', icon: 'mail' },
   ];
 
   constructor(private authSrv: AuthService) {}
 
   ngOnInit(): void {
-    this.user = this.authSrv.user;
+    this.user = this.authSrv.userData;
   }
 }
