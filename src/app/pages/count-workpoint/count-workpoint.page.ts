@@ -3,7 +3,6 @@ import { LoadingController, ToastController } from '@ionic/angular';
 import { Html5Qrcode } from "html5-qrcode";
 
 import { CountsService } from 'src/app/services/counts.service';
-import { WORKPOINT_TYPE, EMPLOYEE_TYPE, PRODUCT_TYPE } from '../../helper/consts';
 import { Count } from 'src/app/interfaces/count';
 import { Product } from 'src/app/interfaces/product';
 import { Workpoint } from 'src/app/interfaces/workpoint';
@@ -15,6 +14,7 @@ import { Packaging } from 'src/app/interfaces/packaging';
 import { Block } from 'src/app/interfaces/block';
 import { Stand } from 'src/app/interfaces/stand';
 import { AuthService } from 'src/app/services/auth.service';
+import { WORKPOINT_TYPE, EMPLOYEE_TYPE, PRODUCT_TYPE } from '../../helper/consts';
 
 @Component({
   selector: 'app-count-workpoint',
@@ -45,8 +45,8 @@ export class CountWorkpointPage implements OnInit {
   html5QrCode: any;
 
   constructor(
-    private toastCtrl: ToastController, 
-    private loadingCtrl: LoadingController, 
+    private toastCtrl: ToastController,
+    private loadingCtrl: LoadingController,
     private countsSrv: CountsService,
     private workpointSrv: WorkpointService,
     private employeeSrv: EmployeesService,
@@ -63,14 +63,14 @@ export class CountWorkpointPage implements OnInit {
 
   loadPackagings() {
     this.packagingSrv.getPackagings()
-    .subscribe({
-      next: pkgs => {
-        this.packagings = pkgs
-      },
-      error: err => {
-        console.error(err)
-      }
-    })
+      .subscribe({
+        next: pkgs => {
+          this.packagings = pkgs
+        },
+        error: err => {
+          console.error(err)
+        }
+      })
   }
 
   async scan(elementScanned: string) {
@@ -95,9 +95,10 @@ export class CountWorkpointPage implements OnInit {
         if (this.isScanning) return
 
         try {
+          await this.html5QrCode.stop()
           await this.beepAudio?.play()
           await this.setScannedData(decodedText)
-          await this.closeScan()
+          await this.resetScan()
         } catch (err) {
           console.log('[function: scanHandler]', err)
         }
@@ -123,7 +124,7 @@ export class CountWorkpointPage implements OnInit {
         case EMPLOYEE_TYPE:
           this.employee = await this.employeeSrv.getEmployeeByID(entityID)
           if (this.employee === null) {
-            this.showToast('Employee does not exist')
+            this.showToast('El empleado no existe')
 
             return false
           }
@@ -134,9 +135,9 @@ export class CountWorkpointPage implements OnInit {
           this.workpoint = null
 
           return false
-      } 
+      }
     } catch (error) {
-      this.showToast('Something went wrong')
+      this.showToast('Error en lectura de codigo')
       throw Error("some error scanning")
     } finally {
       await this.dismissLoading()
@@ -153,7 +154,6 @@ export class CountWorkpointPage implements OnInit {
     this.workpoint = null
     this.employee = null
     this.selectedPackaging = null
-    await this.html5QrCode.stop()
   }
 
   async save() {
@@ -169,18 +169,22 @@ export class CountWorkpointPage implements OnInit {
       await this.countsSrv.saveCount(count);
     } catch (error) {
       console.error(error);
-      this.showToast("Some error saving bunche count");
+      this.showToast("Error guardando conteo");
       throw Error("some error saving bunche count")
     } finally {
       this.dismissLoading()
     }
 
     this.reset();
-    this.showToast('Count saved successfully');
+    this.showToast('Conteo guardado correctamente');
   }
 
-  async closeScan() {
+  async finalizeScan() {
     await this.html5QrCode.stop()
+    this.resetScan()
+  }
+
+  async resetScan() {
     this.isScanning = false
     this.itsScanning = ''
     this.isScannerOpened = false
@@ -203,13 +207,13 @@ export class CountWorkpointPage implements OnInit {
   }
 
   checkCountReady() {
-    return this.workpoint && 
-    this.workpoint.block && 
-    this.workpoint.product && 
-    this.workpoint.stand && 
-    this.employee && 
-    this.selectedPackaging && 
-    this.amount > 0
+    return this.workpoint &&
+      this.workpoint.block &&
+      this.workpoint.product &&
+      this.workpoint.stand &&
+      this.employee &&
+      this.selectedPackaging &&
+      this.amount > 0
   }
 
   async showToast(message: string, color: string = 'success') {

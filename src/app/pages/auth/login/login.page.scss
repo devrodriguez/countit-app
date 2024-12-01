@@ -1,6 +1,13 @@
-.icon-big-size {
-    color: purple;
-    font-size: 84px !important;
+@media screen and (min-width: 992px) {
+    .container {
+        max-width: 380px;
+    }    
+}
+
+:host {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
 }
 
 .grid-container {
@@ -10,3 +17,4 @@
 .logo-img {
     margin-bottom: 20px;
 }
+
