@@ -24,7 +24,7 @@ export class CountsService {
   async findCount(count: Count) {
     const dateFrom = new Date()
     const dateTo = new Date()
-    const { workpoint: { block, product, stand } } = count
+    const { workpoint: { block, product, stand }, employee, packaging } = count
 
     dateFrom.setHours(0, 0, 0, 0)
     dateTo.setHours(23, 59, 59, 999)
@@ -34,6 +34,8 @@ export class CountsService {
       .where('workpoint.block.id', '==', block.id)
       .where('workpoint.product.id', '==', product.id)
       .where('workpoint.stand.id', '==', stand.id)
+      .where('employee.id', '==', employee.id)
+      .where('packaging.id', '==', packaging.id)
       .where('createdAt', '>=', dateFrom.getTime())
       .where('createdAt', '<=', dateTo.getTime())
     }).snapshotChanges()
@@ -55,15 +57,15 @@ export class CountsService {
   }
 
   async saveCount(count: Count) {
-    const collBunCount = this.afs.collection('counts')
+    const collRef = this.afs.collection('counts')
 
     count.createdAt = new Date().getTime()
 
     const resCount = await this.findCount(count)
     if (resCount === null) {
-      return collBunCount.add(count);
+      return collRef.add(count);
     } 
     
-    return collBunCount.doc(resCount.id).update(count);
+    return collRef.doc(resCount.id).update(count);
   }
 }

@@ -35,7 +35,6 @@ export class CountWorkpointPage implements OnInit {
   productType = PRODUCT_TYPE
 
   codeEmployeeSelected: string = ''
-  qrStyle: string = ''
   isScanning = false;
   isScannerOpened: Boolean = false
   isOnEditWorkpoint = false
@@ -75,7 +74,6 @@ export class CountWorkpointPage implements OnInit {
 
   async scan(elementScanned: string) {
     this.itsScanning = elementScanned;
-    this.qrStyle = 'full-screen'
     this.isScannerOpened = true;
 
     const qrConfig = {
@@ -145,15 +143,18 @@ export class CountWorkpointPage implements OnInit {
     }
   }
 
-  async reset() {
-    this.isScanning = false
+  reset() {
     this.isOnEditWorkpoint = false
     this.amount = null
     this.itsScanning = ''
-    this.qrStyle = ''
     this.workpoint = null
     this.employee = null
     this.selectedPackaging = null
+  }
+
+  resetAfterCount() {
+    this.selectedPackaging = null
+    this.amount = null
   }
 
   async save() {
@@ -175,7 +176,7 @@ export class CountWorkpointPage implements OnInit {
       this.dismissLoading()
     }
 
-    this.reset();
+    this.resetAfterCount();
     this.showToast('Conteo guardado correctamente');
   }
 
@@ -229,7 +230,7 @@ export class CountWorkpointPage implements OnInit {
 
   async showLoading() {
     this.loading = await this.loadingCtrl.create({
-      message: 'Loading...',
+      message: 'Cargando...',
       duration: 3000,
       spinner: 'crescent'
     })
