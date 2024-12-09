@@ -20,14 +20,14 @@ export class LoginPage implements OnInit {
   ngOnInit() {
     this.authFormGr = this.formBuilder.group({
       email: new FormControl(
-        'john.rodriguez.25@hotmail.com',
+        '',
         [
           Validators.required,
           Validators.email
         ]
       ),
       password: new FormControl(
-        'Erudito.100',
+        '',
         [
           Validators.required,
           Validators.minLength(5)
