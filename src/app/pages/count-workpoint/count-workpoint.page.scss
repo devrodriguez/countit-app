@@ -1,0 +1,66 @@
+.full-screen {
+    position: absolute; /* Para fijarlo en relación al contenedor */
+    top: 0;             /* Alineado al borde superior */
+    left: 0;            /* Alineado al borde izquierdo */
+    width: 100vw;       /* Ocupa todo el ancho de la ventana */
+    height: 100vh;      /* Ocupa todo el alto de la ventana */
+    background-color: #f0f0f0; /* Color de fondo opcional */
+    z-index: 10;        /* Ajusta la prioridad del componente */
+}
+
+.icon-big-size {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    color: purple;
+    opacity: .3;
+    font-size: 180px !important;
+    margin: auto;
+}
+
+.input-big-size {
+    font-size: 48px;
+    height: 60px;
+}
+
+.item-amount {
+    margin-top: 28px;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.unread-indicator {
+    background: var(--ion-color-primary);
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    position: absolute;
+    inset-inline-start: 12px;
+    top: 12px;
+}
+
+/* Card */
+.card-header {
+    background-color: #eee;
+}
+
+.card-content {
+    padding-top: 10px;
+}
+
+.card-icon {
+    margin-right: 7px;
+}
+
+/* Reader */
+.reader-description {
+    padding: 0 20px;
+    text-align: center;
+}
+
+.reader-actions {
+    margin-top: 12px;
+    text-align: center;
+    width: 100%;
+}

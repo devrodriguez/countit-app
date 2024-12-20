@@ -1,5 +1,9 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard, redirectUnauthorizedTo, redirectLoggedInTo } from '@angular/fire/auth-guard'
+
+const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
+const redirectLoggedInToItems = () => redirectLoggedInTo(['count-workpoint']);
 
 const routes: Routes = [
   {
@@ -8,17 +12,16 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'counts',
-    loadChildren: () => import('./pages/counts/counts.module').then( m => m.CountsPageModule)
-    // TODO implement fire auth guard from @angular/fire/auth-guard
-  },
-  {
     path: 'login',
-    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./pages/auth/login/login.module').then( m => m.LoginPageModule),
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectLoggedInToItems }
   },
   {
-    path: 'count-bunches',
-    loadChildren: () => import('./pages/count-bunches/count-bunches.module').then( m => m.CountBunchesPageModule)
+    path: 'count-workpoint',
+    loadChildren: () => import('./pages/count-workpoint/count-workpoint.module').then( m => m.CountWorkpointPageModule),
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin }
   }
 ];
 

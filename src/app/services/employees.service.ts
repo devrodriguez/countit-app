@@ -1,7 +1,5 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
-import { map } from 'rxjs/operators';
-import { firstValueFrom } from 'rxjs';
+import { Injectable, OnInit } from '@angular/core';
+import { collection, CollectionReference, doc, DocumentData, Firestore, getDoc } from '@angular/fire/firestore';
 
 import { Employee } from '../interfaces/employee';
 
@@ -10,27 +8,22 @@ import { Employee } from '../interfaces/employee';
 })
 export class EmployeesService {
 
-  constructor(private afs: AngularFirestore) { }
+  private employeeRef: CollectionReference<DocumentData>;
 
-  getEmployees(): AngularFirestoreCollection<Employee> {
-    const collEmployees: AngularFirestoreCollection<Employee> = this.afs.collection<Employee>("employees", q => q.orderBy("name"));
-    return collEmployees;
+  constructor(private readonly firestore: Firestore) {
+    this.employeeRef = collection(this.firestore, 'employees')
   }
 
-  async getEmployee(code: string): Promise<Employee> {
-    const snapshot = this.afs.collection<Employee>('employees', q => 
-      q.where('code', '==', code)
-    ).snapshotChanges();
+  async getEmployeeByID(docID: string): Promise<Employee | null> {
+    const docRef = doc(this.employeeRef, docID)
+    const docSnap = await getDoc(docRef)
 
-    const actions = await firstValueFrom(snapshot);
-
-    if (actions.length === 0) {
-      throw new Error(`No se encontró ningún empleado con el código ${code}`);
+    if (!docSnap.exists()) {
+      return null;
     }
 
-    const a = actions[0];
-    const data = a.payload.doc.data() as Employee;
-    // const id = a.payload.doc.id;
-    return { ...data };
+    const data = docSnap.data() as Employee;
+    const id = docSnap.id;
+    return { ...data, id };
   }
 }
