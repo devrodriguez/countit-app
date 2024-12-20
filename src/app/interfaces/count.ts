@@ -9,6 +9,7 @@ export interface Count {
     employee: Employee
     workpoint: Workpoint
     packaging: Packaging
+    createdBy: string
     createdAt: number
     updatedAt: number
 }
