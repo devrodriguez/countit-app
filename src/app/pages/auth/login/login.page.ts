@@ -19,11 +19,10 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.authFormGr = this.formBuilder.group({
-      email: new FormControl(
+      nickname: new FormControl(
         '',
         [
           Validators.required,
-          Validators.email
         ]
       ),
       password: new FormControl(
@@ -37,10 +36,10 @@ export class LoginPage implements OnInit {
   }
 
   async signIn() {
-    const { email, password } = this.authFormGr.value
+    const { nickname, password } = this.authFormGr.value
 
     try {
-      await this.authSrv.signIn({ email, password })
+      await this.authSrv.signIn(nickname, password)
       this.router.navigateByUrl('count-workpoint', { replaceUrl: true })
     } catch (err) {
       console.error(err)
