@@ -13,6 +13,8 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { HttpClientModule } from '@angular/common/http';
+import { CountWorkpointPage } from './pages/count-workpoint/count-workpoint.page';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     IonicModule.forRoot(),
     AppRoutingModule,
     IonicModule,
+    HttpClientModule,
     provideFirebaseApp(
       () => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),

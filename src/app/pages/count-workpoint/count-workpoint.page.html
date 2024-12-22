@@ -17,11 +17,8 @@
     </ion-card-header>
     <ion-card-content class="card-content">
       <div style="width: 100%;" *ngIf="isOnEditWorkpoint">
-        <app-edit-workpoint 
-        (onBlockChange)="handleBlockChange($event)"
-        (onProductChange)="handleProductChange($event)"
-        (onStandChange)="handleStandChange($event)"
-        ></app-edit-workpoint>
+        <app-edit-workpoint (onBlockChange)="handleBlockChange($event)" (onProductChange)="handleProductChange($event)"
+          (onStandChange)="handleStandChange($event)"></app-edit-workpoint>
       </div>
       <div style="width: 100%; padding-bottom: 5px;" *ngIf="workpoint">
         <p>Bloque: {{ workpoint.block.name }}</p>
@@ -49,15 +46,10 @@
       </ion-card-subtitle>
     </ion-card-header>
     <ion-card-content class="card-content">
-      <div *ngIf="employee" style="width: 100%;padding-bottom: 5px;">
-        <p>Nombre: {{employee.firstName}} {{employee.lastName}}</p>
+      <div *ngIf="workpoint?.employee" style="width: 100%;padding-bottom: 5px;">
+        <p>Nombre: {{workpoint?.employee.firstName}} {{workpoint?.employee.lastName}}</p>
       </div>
-      <div style="width: 100%; text-align: center;">
-        <ion-button color="light" size="small" (click)="scan(employeeType)">
-          Scan
-          <ion-icon slot="start" name="scan"></ion-icon>
-        </ion-button>
-      </div>
+
     </ion-card-content>
   </ion-card>
   <!-- Packaging -->
@@ -68,12 +60,20 @@
         Embalaje
       </ion-card-subtitle>
     </ion-card-header>
-   <ion-card-content>
-    <ion-select [(ngModel)]="selectedPackaging" interface="action-sheet" placeholder="Seleccione el embalaje" style="width: 100%;">
-      <ion-select-option *ngFor="let packaging of packagings" [value]="packaging">{{ packaging.name }}</ion-select-option>
-    </ion-select>
-   </ion-card-content>
+    <ion-card-content>
+      <ion-select
+        cancelText="Cerrar lista"
+        interface="action-sheet" 
+        placeholder="Seleccione el embalaje"
+        style="width: 100%;"
+        [(ngModel)]="selectedPackaging">
+        <ion-select-option *ngFor="let packaging of packagings" [value]="packaging">
+          {{ packaging.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-card-content>
   </ion-card>
+  <!-- Scanner -->
   <div class="full-screen" [style]="{display: isScannerOpened ? '' : 'none'}">
     <div id="qr-reader"></div>
     <div class="reader-description">
@@ -102,11 +102,7 @@
   <ion-grid>
     <ion-row class="ion-justify-content-center" *ngIf="!isScannerOpened">
       <ion-col sizeSm="12" sizeMd="3">
-        <ion-button 
-          expand="full" 
-          color="success" 
-          [disabled]="!checkCountReady()"
-          (click)="save()">
+        <ion-button expand="full" color="success" [disabled]="!checkCountReady()" (click)="presentAlert()">
           Guardar
         </ion-button>
       </ion-col>
