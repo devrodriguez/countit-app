@@ -1,22 +1,19 @@
 import { Injectable } from '@angular/core';
 import {
   Auth,
-  createUserWithEmailAndPassword,
+  User,
   signInWithCustomToken,
   signOut,
   onAuthStateChanged,
-  User,
   browserSessionPersistence,
   updateProfile
 } from '@angular/fire/auth';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-
+import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
-import { AuthCredentials } from '../interfaces/credentials';
 import { UserUnauthorized } from '../helper/errors/userUnauthorized';
 
-const apiURLLoginUser = 'https://loginuser-xzkfsurz5q-uc.a.run.app'
+const apiURLLoginUser = 'https://us-central1-countit-c0d6f.cloudfunctions.net/api/loginUser'
 
 @Injectable({
   providedIn: 'root'

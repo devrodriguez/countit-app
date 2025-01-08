@@ -61,11 +61,6 @@ export class CountsService {
 
     count.createdAt = new Date().getTime()
 
-    const resCount = await this.findCount(count)
-    if (resCount === null) {
-      return collRef.add(count);
-    } 
-    
-    return collRef.doc(resCount.id).update(count);
+    return collRef.add(count);
   }
 }
