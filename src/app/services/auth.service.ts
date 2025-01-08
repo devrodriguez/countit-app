@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
-import { 
+import {
   Auth,
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
+  User,
+  signInWithCustomToken,
+  signOut,
   onAuthStateChanged,
-  User, 
-  browserSessionPersistence
+  browserSessionPersistence,
+  updateProfile
 } from '@angular/fire/auth';
-import { AuthCredentials } from '../interfaces/credentials';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+
+import { UserUnauthorized } from '../helper/errors/userUnauthorized';
+
+const apiURLLoginUser = 'https://us-central1-countit-c0d6f.cloudfunctions.net/api/loginUser'
 
 @Injectable({
   providedIn: 'root'
@@ -16,23 +21,43 @@ import { AuthCredentials } from '../interfaces/credentials';
 export class AuthService {
   public userData: User | null = null
 
-  constructor(private readonly auth: Auth) {
+  constructor(
+    private readonly auth: Auth,
+    private http: HttpClient
+  ) {
     onAuthStateChanged(auth, (user) => {
       this.userData = user
     })
   }
 
-  register({ email, password }: AuthCredentials) {
-    return createUserWithEmailAndPassword(this.auth, email, password)
-  }
+  async signIn(nickname: string, password: string) {
+    try {
+      const resObs$ = this.http.post<{ token: string, user: any }>(apiURLLoginUser, { nickname, password })
+      const res = await firstValueFrom(resObs$)
+      const { token, user: { fullName } } = res
+      this.setToken(token)
 
-  async signIn({ email, password }: AuthCredentials) {
-    return this.auth.setPersistence(browserSessionPersistence)
-    .then(() => signInWithEmailAndPassword(this.auth, email, password))
-    
+      await this.auth.setPersistence(browserSessionPersistence)
+      const userCredential = await signInWithCustomToken(this.auth, token)
+      const { user } = userCredential
+      if (user) {
+        await updateProfile(user, { displayName: fullName })
+      }
+    } catch (err) {
+      console.error(err)
+      if (err.status === 401) {
+        throw new UserUnauthorized(err.message)
+      }
+
+      throw new Error('error authenticating user')
+    }
   }
 
   signOut() {
     return signOut(this.auth)
+  }
+
+  setToken(token: string): void {
+    localStorage.setItem('awt', token);
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { Html5Qrcode } from "html5-qrcode";
 
 import { CountsService } from 'src/app/services/counts.service';
@@ -50,10 +50,28 @@ export class CountWorkpointPage implements OnInit {
     private workpointSrv: WorkpointService,
     private employeeSrv: EmployeesService,
     private packagingSrv: PackagingService,
+    private alertCtrl: AlertController,
     public authSrv: AuthService,
   ) {
     this.beepAudio = new Audio('../../../assets/sounds/beep.mp3');
   }
+
+  public alertButtons = [
+    {
+      text: 'Cancelar',
+      role: 'cancel',
+      handler: () => {
+
+      }
+    },
+    {
+      text: 'Aceptar',
+      role: 'acept',
+      handler: () => {
+        
+      }
+    }
+  ]
 
   ngOnInit() {
     this.loadPackagings()
@@ -161,7 +179,7 @@ export class CountWorkpointPage implements OnInit {
     const createdBy = this.authSrv.userData?.displayName
 
     let count = {
-      employee: this.employee,
+      employee: this.workpoint.employee,
       workpoint: this.workpoint,
       packaging: this.selectedPackaging,
       amount: this.amount,
@@ -215,7 +233,7 @@ export class CountWorkpointPage implements OnInit {
       this.workpoint.block &&
       this.workpoint.product &&
       this.workpoint.stand &&
-      this.employee &&
+      this.workpoint.employee &&
       this.selectedPackaging &&
       this.amount > 0
   }
@@ -231,9 +249,30 @@ export class CountWorkpointPage implements OnInit {
     await toast.present();
   }
 
+  async presentAlert() {
+    const alert = await this.alertCtrl.create({
+      header: 'Confirmación de conteo',
+      message: '¿Deseas guardar este conteo?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Aceptar',
+          role: 'confirm',
+          handler: () => {
+            this.save()
+          }
+        },
+      ]
+    })
+    await alert.present();
+  }
+
   async showLoading() {
     this.loading = await this.loadingCtrl.create({
-      message: 'Cargando...',
+      message: 'Guardando...',
       duration: 3000,
       spinner: 'crescent'
     })
