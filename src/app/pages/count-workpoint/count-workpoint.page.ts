@@ -179,7 +179,6 @@ export class CountWorkpointPage implements OnInit {
     const createdBy = this.authSrv.userData?.displayName
 
     let count = {
-      employee: this.workpoint.employee,
       workpoint: this.workpoint,
       packaging: this.selectedPackaging,
       amount: this.amount,
